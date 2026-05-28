@@ -7,6 +7,52 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
+    public function login(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if ($validated['email'] === 'admin@email.com' && $validated['password'] === 'password123') {
+            return response()->json([
+                'message' => 'Admin login successful',
+                'role' => 'admin',
+                'token' => 'admin-token',
+                'user' => [
+                    'id' => 0,
+                    'employee_id' => 'ADMIN',
+                    'first_name' => 'Admin',
+                    'last_name' => 'User',
+                    'email' => 'admin@email.com',
+                    'position' => 'Administrator',
+                    'salary' => 0,
+                ],
+            ], 200);
+        }
+
+        if ($validated['password'] !== '123456') {
+            return response()->json([
+                'message' => 'Invalid email or password'
+            ], 401);
+        }
+
+        $employee = Employee::where('email', $validated['email'])->first();
+
+        if (!$employee) {
+            return response()->json([
+                'message' => 'Invalid email or password'
+            ], 401);
+        }
+
+        return response()->json([
+            'message' => 'Employee login successful',
+            'role' => 'employee',
+            'token' => 'employee-token-' . $employee->id,
+            'user' => $employee,
+        ], 200);
+    }
+
     public function index()
     {
         return response()->json(Employee::latest()->get());
@@ -34,19 +80,12 @@ class EmployeeController extends Controller
     }
     public function showEmployee(Request $request)
     {
-        $request->validate([
-            'employeeId' => 'required|string',
-        ]);
+        $employees = Employee::latest()->get();
 
-        $employee = Employee::where('employee_id', $request->employeeId)->first();
-
-        if (!$employee) {
-            return response()->json([
-                'message' => 'Employee not found'
-            ], 404);
-        }
-
-        return response()->json($employee);
+        return response()->json([
+            'message' => 'Employees retrieved successfully',
+            'data' => $employees
+        ], 200);
     }
 
     public function updateEmployee(Request $request)
