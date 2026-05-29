@@ -2,10 +2,16 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfilePictureController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DocumentController;
 
 Route::post('/login', [EmployeeController::class, 'login']);
+
+Route::get('/profile-picture', [ProfilePictureController::class, 'show']);
+Route::post('/profile-picture', [ProfilePictureController::class, 'upload']);
+Route::get('/profile-pictures', [ProfilePictureController::class, 'index']);
+
 Route::post('/employees', [EmployeeController::class, 'addEmployee']);
 Route::post('/get-employees', [EmployeeController::class, 'showEmployee']);
 Route::post('/put-employees', [EmployeeController::class, 'updateEmployee']);

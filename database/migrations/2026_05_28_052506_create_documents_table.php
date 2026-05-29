@@ -20,8 +20,17 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function up(): void
     {
-        Schema::dropIfExists('documents');
+        Schema::create('documents', function (Blueprint $table) {
+            $table->id();
+            $table->string('task_name');
+            $table->enum('status', ['completed', 'in progress', 'pending'])->default('pending');
+            $table->text('notes')->nullable();
+            $table->date('deadline_date');
+            $table->string('given_by');
+            $table->longText('signature')->nullable();
+            $table->timestamps();
+        });
     }
 };
