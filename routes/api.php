@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfilePictureController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DocumentController;
-
+//yes
 Route::post('/login', [EmployeeController::class, 'login']);
 
 Route::get('/profile-picture', [ProfilePictureController::class, 'show']);
